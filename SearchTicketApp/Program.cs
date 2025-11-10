@@ -1,7 +1,12 @@
+using SearchTicketApp.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.ConfigureJsonSerializerOptions();
+});
 
 var app = builder.Build();
 
