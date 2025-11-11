@@ -1,36 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SearchTicketApp.Data.Models
+namespace SearchTicketApp.Data.Models.Abstract
 {
-    public class Ticket
+    public abstract class Ticket : Entity
     {
-        public int Id { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(200), Required]
         public string Title { get; set; } = default!;
 
-        public DateTime DepartureTime { get; set; }
-
-        public DateTime ArrivalTime { get; set; }
-
+        [Required]
         public TravelTransportationType TravelTransportationType { get; set; } = default!;
 
-        public TimeTable TimeTable { get; set; } = default!;
-
-        [ForeignKey(nameof(Destination))]
+        [ForeignKey(nameof(Destination)), Required]
         public int DestinationId { get; set; }
 
         public Location Destination { get; set; } = default!;
 
-        [ForeignKey(nameof(Origin))]
+        [ForeignKey(nameof(Origin)), Required]
         public int OriginId { get; set; }
 
         public Location Origin { get; set; } = default!;
 
-        public long ViewsCount { get; set; } = 0;
-
-        public long PurchaseCount { get; set; } = 0;
-
+        [Range(0.0f, float.PositiveInfinity), Required]
+        public float Price { get; set; }
     }
 }
