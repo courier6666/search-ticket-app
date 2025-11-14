@@ -1,16 +1,36 @@
-﻿namespace SearchTicketApp.Shared
+﻿using System.Text.Json.Serialization;
+
+namespace SearchTicketApp.Shared
 {
     public class PagingInfo<T>
     {
-        public ICollection<T> Items { get; set; } = default!;
+        [JsonConstructor]
+        public PagingInfo()
+        {
+            
+        }
 
-        public int PageSize { get; set; }
+        public static PagingInfo<T> Create(ICollection<T> items, int totalCount, int page, int pageSize)
+        {
+            return new PagingInfo<T>()
+            {
+                Items = items,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Page = page,
+                TotalPages = (int)MathF.Ceiling((float)totalCount / pageSize),
+            };
+        }
 
-        public int Page { get; set; }
+        public ICollection<T> Items { get; private set; } = default!;
 
-        public int TotalPages { get; set; }
+        public int PageSize { get; private set; }
 
-        public int PageCount { get; set; }
+        public int Page { get; private set; }
+
+        public int TotalPages { get; private set; }
+
+        public int TotalCount { get; private set; }
 
         public bool HasNext => Page < TotalPages;
 
