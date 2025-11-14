@@ -24,5 +24,14 @@ namespace SearchTicketApp.Data.Models.Abstract
 
         [Range(0.0f, float.PositiveInfinity), Required]
         public float Price { get; set; }
+
+        [Required]
+        public DateTime DepartureTimeUtc { get; set; }
+
+        [Required]
+        public DateTime ArrivalTimeUtc { get; set; }
+
+        [Required, MaxLength(200)]
+        public string DepartureLocalTimeZone { get; set; } = default!;
     }
 }

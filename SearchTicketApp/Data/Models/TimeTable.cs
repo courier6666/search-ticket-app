@@ -16,7 +16,7 @@ namespace SearchTicketApp.Data.Models
         [Required]
         public TimeSpan TravelDuration { get; set; }
 
-        [Required]
+        [Required, MaxLength(200)]
         public string DepartureTimeZone { get; set; } = default!;
 
         [ForeignKey(nameof(OnSaleTicket)), Required]
