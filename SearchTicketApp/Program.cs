@@ -4,6 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using SearchTicketApp.Data;
 using SearchTicketApp.Data.Models;
 using SearchTicketApp.Extensions;
+using SearchTicketApp.Factories;
+using SearchTicketApp.Interfaces;
+using SearchTicketApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +26,12 @@ builder.Services.AddDbContext<TicketDbContext>(options =>
 builder.Services.AddIdentity<User, IdentityRole<int>>().
     AddEntityFrameworkStores<TicketDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContextAccessor, UserContextAccessor>();
+builder.Services.AddScoped<IOnSaleTicketService, OnSaleTicketService>();
+builder.Services.AddScoped<IPurchasedTicketService, PurchasedTicketService>();
+builder.Services.AddScoped<IOnSaleTicketSearchService, OnSaleTicketSearchService>();
 
 var app = builder.Build();
 
