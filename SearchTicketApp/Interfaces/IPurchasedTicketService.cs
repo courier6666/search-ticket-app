@@ -1,12 +1,12 @@
 ﻿using SearchTicketApp.Data.Models;
-using SearchTicketApp.Models.Query;
+using SearchTicketApp.Models.Result;
 using SearchTicketApp.Shared;
 
 namespace SearchTicketApp.Interfaces
 {
-    public interface IPurchasedTicketService : IEntityQueryService<PurchasedTicketQuery>
+    public interface IPurchasedTicketService : IEntityQueryService<PurchasedTicketResult>
     {
-        Task<ICollection<PurchasedTicketQuery>> GetAllForUserAsync(int userId);
-        Task<PagingInfo<PurchasedTicketQuery>> GetAllForUserPagedAsync(int userId, int page, int pageSize);
+        Task<ICollection<PurchasedTicketResult>> GetAllForUserAsync(int userId);
+        Task<PagingInfo<PurchasedTicketResult>> GetAllForUserPagedAsync(int userId, int page, int pageSize);
     }
 }

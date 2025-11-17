@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using SearchTicketApp.Data.Models.Abstract;
 
-namespace SearchTicketApp.Models.Dto
+namespace SearchTicketApp.Models.Command
 {
     public class LocationCommand : Entity
     {

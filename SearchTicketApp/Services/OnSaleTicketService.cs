@@ -7,7 +7,8 @@ using SearchTicketApp.Extensions;
 using SearchTicketApp.Interfaces;
 using SearchTicketApp.Mapping.Expressions;
 using SearchTicketApp.Mapping.Extensions;
-using SearchTicketApp.Models.Query;
+using SearchTicketApp.Models.Command;
+using SearchTicketApp.Models.Result;
 using SearchTicketApp.Models.User;
 using SearchTicketApp.Shared;
 using static SearchTicketApp.Services.LocalAndUserTimeTicketSetter;
@@ -19,21 +20,36 @@ namespace SearchTicketApp.Services
         private readonly TicketDbContext dbContext;
         private readonly UserManager<User> userManager;
         private readonly IUserContextAccessor userContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public OnSaleTicketService(TicketDbContext dbContext,
             UserManager<User> userManager,
-            IUserContextAccessor userContextAccessor)
+            IUserContextAccessor userContextAccessor,
+            IHttpContextAccessor httpContextAccessor)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
+            this.userContextAccessor = userContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        private IQueryable<OnSaleTicketQuery> GetOnSaleTicketQuery()
+        private IQueryable<OnSaleTicketResult> GetOnSaleTicketQuery()
         {
-            return this.dbContext.Tickets.
-                Include(t => t.Destination).
-                Include(t => t.Origin).
-                Select(OnSaleTicketMappingExpression.ToOnSaleTicketQuery);
+            if (this.httpContextAccessor.HttpContext?.User.IsAuthenticated() ?? false)
+            {
+                return this.dbContext.Tickets.Include(t => t.Destination).Include(t => t.Origin)
+                    .Include(t => t.PurchasedTickets)
+                    .Select(OnSaleTicketMappingExpression.GetOnSaleTicketWithPurchaseStatusByUserQuery(
+                        this.httpContextAccessor.HttpContext.User.GetUserId() ?? 0));
+            }
+            else
+            {
+
+                return this.dbContext.Tickets.
+                    Include(t => t.Destination).
+                    Include(t => t.Origin).
+                    Select(OnSaleTicketMappingExpression.GetOnSaleTicketQuery());
+            }
         }
 
         public async Task AddAsync(OnSaleTicketCommand entity)
@@ -141,7 +157,7 @@ namespace SearchTicketApp.Services
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<OnSaleTicketQuery?> GetByIdAsync(int id)
+        public async Task<OnSaleTicketResult?> GetByIdAsync(int id)
         {
             var foundTicket = await GetOnSaleTicketQuery().
                 FirstOrDefaultAsync(t => t.Id == id);
@@ -156,7 +172,7 @@ namespace SearchTicketApp.Services
             return foundTicket;
         }
 
-        public async Task<ICollection<OnSaleTicketQuery>> GetAllAsync()
+        public async Task<ICollection<OnSaleTicketResult>> GetAllAsync()
         {
             var tickets = await GetOnSaleTicketQuery().
                 ToListAsync();
@@ -172,7 +188,7 @@ namespace SearchTicketApp.Services
             return tickets;
         }
 
-        public async Task<PagingInfo<OnSaleTicketQuery>> GetAllPagedAsync(int page, int pageSize)
+        public async Task<PagingInfo<OnSaleTicketResult>> GetAllPagedAsync(int page, int pageSize)
         {
             var ticketsQuery = GetOnSaleTicketQuery();
 
@@ -183,7 +199,7 @@ namespace SearchTicketApp.Services
                 Take(pageSize).
                 ToListAsync();
 
-            return PagingInfo<OnSaleTicketQuery>.Create(pagedTickets, ticketsCount, page, pageSize);
+            return PagingInfo<OnSaleTicketResult>.Create(pagedTickets, ticketsCount, page, pageSize);
         }
     }
 }

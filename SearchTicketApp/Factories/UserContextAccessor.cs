@@ -6,7 +6,7 @@ namespace SearchTicketApp.Factories
 {
     public class UserContextAccessor : IUserContextAccessor
     {
-        private const string UserContextCookieName = "userContext";
+        private const string UserContextCookieName = "UserContext";
 
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly JsonSerializerOptions jsonOptions;

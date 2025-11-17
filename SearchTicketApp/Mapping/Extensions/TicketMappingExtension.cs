@@ -1,4 +1,6 @@
 ﻿using SearchTicketApp.Data.Models.Abstract;
+using SearchTicketApp.Helpers;
+using SearchTicketApp.Models.Abstract;
 using SearchTicketApp.Models.Abstracts;
 
 namespace SearchTicketApp.Mapping.Extensions
@@ -9,8 +11,8 @@ namespace SearchTicketApp.Mapping.Extensions
         {
             ticket.Title = ticketCommand.Title;
             ticket.TravelTransportationType = ticketCommand.TravelTransportationType;
-            ticket.ArrivalTimeUtc = ticketCommand.ArrivalTimeUtc;
-            ticket.DepartureTimeUtc = ticketCommand.DepartureTimeUtc;
+            ticket.ArrivalTimeUtc = DateTimeConverter.ToUtc(ticketCommand.ArrivalTime, ticketCommand.DepartureLocalTimeZone);
+            ticket.DepartureTimeUtc = DateTimeConverter.ToUtc(ticketCommand.DepartureTime, ticketCommand.DepartureLocalTimeZone);
             ticket.Price = ticketCommand.Price;
             ticket.DepartureLocalTimeZone = ticketCommand.DepartureLocalTimeZone;
 

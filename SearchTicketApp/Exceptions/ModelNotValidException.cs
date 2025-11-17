@@ -23,5 +23,11 @@ namespace SearchTicketApp.Exceptions
             if (!modelState.IsValid)
                 throw new ModelNotValidException(modelState);
         }
+
+        public static void Throw(ModelStateDictionary modelState)
+        {
+            if (!modelState.IsValid)
+                throw new ModelNotValidException(modelState);
+        }
     }
 }

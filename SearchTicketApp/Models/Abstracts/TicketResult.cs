@@ -4,11 +4,11 @@ using SearchTicketApp.Models.Dto;
 using SearchTicketApp.Validation.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SearchTicketApp.Models.Query;
+using SearchTicketApp.Models.Result;
 
 namespace SearchTicketApp.Models.Abstracts
 {
-    public class TicketQuery : Entity
+    public class TicketResult : Entity
     {
         public string Title { get; set; } = default!;
 
@@ -16,11 +16,11 @@ namespace SearchTicketApp.Models.Abstracts
 
         public int DestinationId { get; set; }
 
-        public LocationQuery Destination { get; set; } = default!;
+        public LocationResult Destination { get; set; } = default!;
 
         public int OriginId { get; set; }
 
-        public LocationQuery Origin { get; set; } = default!;
+        public LocationResult Origin { get; set; } = default!;
 
         public float Price { get; set; }
 

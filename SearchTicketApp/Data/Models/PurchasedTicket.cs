@@ -10,5 +10,9 @@ namespace SearchTicketApp.Data.Models
         public int PurchaserId { get; set; }
 
         public User Purchaser { get; set; } = default!;
+
+        public int? OnSaleTicketId { get; set; }
+
+        public OnSaleTicket? OnSaleTicket { get; set; }
     }
 }

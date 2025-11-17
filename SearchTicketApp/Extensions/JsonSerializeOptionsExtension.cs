@@ -8,10 +8,10 @@ namespace SearchTicketApp.Extensions
 {
     public static class JsonSerializeOptionsExtension
     {
-        public static void ConfigureJsonSerializerOptions(this JsonOptions options)
+        public static void ConfigureJsonSerializerOptions(this JsonSerializerOptions options)
         {
-            options.JsonSerializerOptions.AllowTrailingCommas = true;
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            options.AllowTrailingCommas = true;
+            options.Converters.Add(new JsonStringEnumConverter());
         }
     }
 }

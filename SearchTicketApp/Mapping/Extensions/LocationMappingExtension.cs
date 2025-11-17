@@ -1,6 +1,5 @@
 ﻿using SearchTicketApp.Data.Models;
-using SearchTicketApp.Models.Dto;
-using SearchTicketApp.Models.Query;
+using SearchTicketApp.Models.Command;
 
 namespace SearchTicketApp.Mapping.Extensions
 {

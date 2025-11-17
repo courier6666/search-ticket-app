@@ -1,0 +1,103 @@
+﻿@model OnSaleTicketResult
+
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <!-- Ticket Title -->
+        <h5 class="card-title">@Model.Title</h5>
+
+        <!-- Travel Info -->
+        <p class="card-text mb-1">
+            <strong>From:</strong> @Model.Origin.Settlement
+            (@Model.Origin.Latitude, @Model.Origin.Longitude)
+        </p>
+        <p class="card-text mb-1">
+            <strong>To:</strong> @Model.Destination.Settlement
+            (@Model.Destination.Latitude, @Model.Destination.Longitude)
+        </p>
+        <p class="card-text mb-1">
+            <strong>Transportation:</strong> @Model.TravelTransportationType
+        </p>
+
+        <!-- Departure / Arrival Times -->
+        <h6 class="card-text mb-1"><strong>Your timezone</strong></h6>
+        <p class="card-text mb-1">
+            <div>
+                <strong>(@Model.UserLocalTimeZone)</strong>
+            </div>
+            <div>
+                <strong>Departure:</strong> @Model.DepartureTimeUser.ToString("g")
+            </div>
+
+        </p>
+        <p class="card-text mb-3">
+            <div>
+                <strong>(@Model.UserLocalTimeZone)</strong>
+            </div>
+            <div>
+                <strong>Arrival:</strong> @Model.ArrivalTimeUser.ToString("g")
+            </div>
+        </p>
+        
+        <h6 class="card-text mb-1"><strong>Local Timezone</strong></h6>
+        <p class="card-text mb-1">
+            <div>
+                <strong>(@Model.UserLocalTimeZone)</strong>
+            </div>
+            <div>
+                <strong>Departure:</strong> @Model.DepartureTimeUser.ToString("g")
+            </div>
+
+        </p>
+        <p class="card-text mb-3">
+            <div>
+                <strong>(@Model.UserLocalTimeZone)</strong>
+            </div>
+            <div>
+                <strong>Arrival:</strong> @Model.ArrivalTimeUser.ToString("g")
+            </div>
+        </p>
+        
+        <h6 class="card-text mb-1"><strong>UTC</strong></h6>
+        <p class="card-text mb-1">
+            <div>
+                <strong>(@Model.UserLocalTimeZone)</strong>
+            </div>
+            <div>
+                <strong>Departure:</strong> @Model.DepartureTimeUser.ToString("g")
+            </div>
+
+        </p>
+        <p class="card-text mb-3">
+            <div>
+                <strong>(@Model.UserLocalTimeZone)</strong>
+            </div>
+            <div>
+                <strong>Arrival:</strong> @Model.ArrivalTimeUser.ToString("g")
+            </div>
+        </p>
+        
+
+
+        <!-- Price and Stats -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold">Price: $@Model.Price</span>
+            <span>
+                <i class="bi bi-eye"></i> @Model.ViewsCount
+                <i class="bi bi-cart"></i> @Model.PurchaseCount
+            </span>
+        </div>
+
+        <!-- Action Button -->
+        @if (Model.IsBought)
+        {
+            <button class="btn btn-secondary" disabled>Already Bought</button>
+        }
+        else
+        {
+            <form method="post" asp-controller="OnSaleTicket" asp-action="Purchase" class="d-inline">
+                <input type="hidden" name="ticketId" value="@Model.Id" />
+                <button type="submit" class="btn btn-primary">Buy Ticket</button>
+            </form>
+        }
+    </div>
+</div>

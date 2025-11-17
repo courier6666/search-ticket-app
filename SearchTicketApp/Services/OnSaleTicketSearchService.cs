@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using SearchTicketApp.Data;
 using SearchTicketApp.Data.Models;
 using SearchTicketApp.Interfaces;
-using SearchTicketApp.Models.Query;
+using SearchTicketApp.Models.Result;
 using SearchTicketApp.Shared;
 
 namespace SearchTicketApp.Services
@@ -19,17 +19,17 @@ namespace SearchTicketApp.Services
             this.userContextAccessor = userContextAccessor;
         }
 
-        public Expression<Func<OnSaleTicketQuery, bool>> GetOnSaleTicketFilterExpression(OnSaleSearchQuery query)
+        public Expression<Func<OnSaleTicketResult, bool>> GetOnSaleTicketFilterExpression(OnSaleSearchQuery query)
         {
             throw new NotImplementedException();
         }
 
-        public Task<PagingInfo<OnSaleTicketQuery>> GetAllTicketsPagedAsync(OnSaleSearchQuery query)
+        public Task<PagingInfo<OnSaleTicketResult>> GetAllTicketsPagedAsync(OnSaleSearchQuery query)
         {
             throw new NotImplementedException();
         }
 
-        public Task<PagingInfo<OnSaleTicketQuery>> GetAllTicketsWithUserContextPagedAsync(OnSaleSearchQuery query)
+        public Task<PagingInfo<OnSaleTicketResult>> GetAllTicketsWithUserContextPagedAsync(OnSaleSearchQuery query)
         {
             throw new NotImplementedException();
         }

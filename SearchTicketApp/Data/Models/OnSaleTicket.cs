@@ -9,5 +9,7 @@ namespace SearchTicketApp.Data.Models
         public long ViewsCount { get; set; } = 0;
 
         public long PurchaseCount { get; set; } = 0;
+
+        public ICollection<PurchasedTicket> PurchasedTickets { get; set; }
     }
 }

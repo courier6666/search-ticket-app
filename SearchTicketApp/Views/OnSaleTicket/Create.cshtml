@@ -1,0 +1,100 @@
+﻿@using SearchTicketApp.Data.Models
+@model OnSaleTicketCommand
+@{
+}
+<div class="row justify-content-md-center">
+    <h3 class="text-center mb-4">Create Ticket</h3>
+    <div class="col-md-8">
+        <form asp-controller="OnSaleTicket" asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" placeholder="Ticket Title" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TravelTransportationType" class="form-label"></label>
+                <select asp-for="TravelTransportationType" class="form-select" id="timeZoneSelect">
+                    <option value="">Select Transportation</option>
+                    <option value="@TravelTransportationType.Bus">Bus</option>
+                    <option value="@TravelTransportationType.Train">Train</option>
+                    <option value="@TravelTransportationType.Plane">Plane</option>
+                    <!-- Add more options as needed -->
+                </select>
+                <span asp-validation-for="TravelTransportationType" class="text-danger"></span>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <h5>Origin</h5>
+                    <label asp-for="Origin.Settlement" class="form-label"></label>
+                    <input asp-for="Origin.Settlement" class="form-control" placeholder="City/Settlement" />
+                    <span asp-validation-for="Origin.Settlement" class="text-danger"></span>
+
+                    <label asp-for="Origin.Latitude" class="form-label mt-2"></label>
+                    <input asp-for="Origin.Latitude" class="form-control" placeholder="Latitude" />
+
+                    <label asp-for="Origin.Longitude" class="form-label mt-2"></label>
+                    <input asp-for="Origin.Longitude" class="form-control" placeholder="Longitude" />
+                </div>
+
+                <div class="col">
+                    <h5>Destination</h5>
+                    <label asp-for="Destination.Settlement" class="form-label"></label>
+                    <input asp-for="Destination.Settlement" class="form-control" placeholder="City/Settlement" />
+                    <span asp-validation-for="Destination.Settlement" class="text-danger"></span>
+
+                    <label asp-for="Destination.Latitude" class="form-label mt-2"></label>
+                    <input asp-for="Destination.Latitude" class="form-control" placeholder="Latitude" />
+
+                    <label asp-for="Destination.Longitude" class="form-label mt-2"></label>
+                    <input asp-for="Destination.Longitude" class="form-control" placeholder="Longitude" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label"></label>
+                <input asp-for="Price" class="form-control" placeholder="Price" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label asp-for="DepartureTime" class="form-label"></label>
+                    <input asp-for="DepartureTime" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="DepartureTime" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="ArrivalTime" class="form-label"></label>
+                    <input asp-for="ArrivalTime" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="ArrivalTime" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DepartureLocalTimeZone" class="form-label"></label>
+                <input asp-for="DepartureLocalTimeZone" class="form-control" placeholder="Time Zone" />
+                <span asp-validation-for="DepartureLocalTimeZone" class="text-danger"></span>
+            </div>
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="d-flex justify-content-between">
+                <button type="reset" class="btn btn-secondary">Clear</button>
+                <button type="submit" class="btn btn-primary">Create Ticket</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="~/js/timeZones.js"></script>
+
+<script>
+    const selectTimeZones = document.getElementById('timeZoneSelect');
+    timezones.forEach(tz => {
+      const option = document.createElement("option");
+      option.value = tz;
+      option.textContent = tz.replace("_", " ");
+      select.appendChild(option);
+    });
+
+</script>

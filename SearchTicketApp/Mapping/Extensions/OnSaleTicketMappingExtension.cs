@@ -2,6 +2,7 @@
 using SearchTicketApp.Data.Models.Abstract;
 using System.Net.Sockets;
 using SearchTicketApp.Helpers;
+using SearchTicketApp.Models.Command;
 
 namespace SearchTicketApp.Mapping.Extensions
 {

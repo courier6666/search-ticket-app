@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using SearchTicketApp.Data.Models.Abstract;
 
-namespace SearchTicketApp.Models.Query
+namespace SearchTicketApp.Models.Result
 {
-    public class LocationQuery : Entity
+    public class LocationResult : Entity
     {
         public double Latitude { get; set; }
 

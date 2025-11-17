@@ -1,8 +1,8 @@
 ﻿using SearchTicketApp.Data.Models.Abstract;
 
-namespace SearchTicketApp.Models.Query
+namespace SearchTicketApp.Models.Result
 {
-    public class UserQuery : Entity
+    public class UserResult : Entity
     {
         public string Email { get; set; } = default!;
     }

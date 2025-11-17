@@ -3,7 +3,7 @@ using SearchTicketApp.Data;
 using SearchTicketApp.Data.Models.Abstract;
 using SearchTicketApp.Interfaces;
 using SearchTicketApp.Mapping.Expressions;
-using SearchTicketApp.Models.Query;
+using SearchTicketApp.Models.Result;
 using SearchTicketApp.Shared;
 using static SearchTicketApp.Services.LocalAndUserTimeTicketSetter;
 
@@ -20,7 +20,7 @@ namespace SearchTicketApp.Services
             this.userContextAccessor = userContextAccessor;
         }
 
-        private IQueryable<PurchasedTicketQuery> GetPurchasedTicketQuery()
+        private IQueryable<PurchasedTicketResult> GetPurchasedTicketQuery()
         {
             return this.dbContext.PurchasedTickets.
                 Include(t => t.Destination).
@@ -28,7 +28,7 @@ namespace SearchTicketApp.Services
                 Select(PurchasedTicketMappingExpression.ToPurchasedTicketQuery);
         }
 
-        public async Task<ICollection<PurchasedTicketQuery>> GetAllAsync()
+        public async Task<ICollection<PurchasedTicketResult>> GetAllAsync()
         {
             var tickets = await GetPurchasedTicketQuery().
                 ToListAsync();
@@ -44,7 +44,7 @@ namespace SearchTicketApp.Services
             return tickets;
         }
 
-        public async Task<ICollection<PurchasedTicketQuery>> GetAllForUserAsync(int userId)
+        public async Task<ICollection<PurchasedTicketResult>> GetAllForUserAsync(int userId)
         {
             var usersTickets = await GetPurchasedTicketQuery().
                 Where(t => t.PurchaserId == userId).
@@ -61,7 +61,7 @@ namespace SearchTicketApp.Services
             return usersTickets;
         }
 
-        public async Task<PagingInfo<PurchasedTicketQuery>> GetAllForUserPagedAsync(int userId, int page, int pageSize)
+        public async Task<PagingInfo<PurchasedTicketResult>> GetAllForUserPagedAsync(int userId, int page, int pageSize)
         {
             var ticketsQuery = GetPurchasedTicketQuery().
                 Where(t => t.PurchaserId == userId);
@@ -73,10 +73,10 @@ namespace SearchTicketApp.Services
                 Take(pageSize).
                 ToListAsync();
 
-            return PagingInfo<PurchasedTicketQuery>.Create(pagedTickets, ticketsCount, page, pageSize);
+            return PagingInfo<PurchasedTicketResult>.Create(pagedTickets, ticketsCount, page, pageSize);
         }
 
-        public async Task<PurchasedTicketQuery?> GetByIdAsync(int id)
+        public async Task<PurchasedTicketResult?> GetByIdAsync(int id)
         {
             var foundTicket = await GetPurchasedTicketQuery().
                 FirstOrDefaultAsync(t => t.Id == id);
@@ -91,7 +91,7 @@ namespace SearchTicketApp.Services
             return foundTicket;
         }
 
-        public async Task<PagingInfo<PurchasedTicketQuery>> GetAllPagedAsync(int page, int pageSize)
+        public async Task<PagingInfo<PurchasedTicketResult>> GetAllPagedAsync(int page, int pageSize)
         {
             var ticketsQuery = GetPurchasedTicketQuery();
 
@@ -102,7 +102,7 @@ namespace SearchTicketApp.Services
                 Take(pageSize).
                 ToListAsync();
 
-            return PagingInfo<PurchasedTicketQuery>.Create(pagedTickets, ticketsCount, page, pageSize);
+            return PagingInfo<PurchasedTicketResult>.Create(pagedTickets, ticketsCount, page, pageSize);
         }
     }
 }

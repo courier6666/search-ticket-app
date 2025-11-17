@@ -1,26 +1,38 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SearchTicketApp.Data;
 using SearchTicketApp.Data.Models;
+using SearchTicketApp.Data.Seed;
 using SearchTicketApp.Extensions;
 using SearchTicketApp.Factories;
 using SearchTicketApp.Interfaces;
+using SearchTicketApp.Options;
 using SearchTicketApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("TicketSqliteDb");
 
+builder.Services.Configure<AdminCredentials>(builder.Configuration.GetSection("AdminCredentials"));
+
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
-    options.ConfigureJsonSerializerOptions();
+    options.JsonSerializerOptions.ConfigureJsonSerializerOptions();
 });
 
 builder.Services.AddDbContext<TicketDbContext>(options =>
 {
     options.UseSqlite(connectionString);
+});
+
+builder.Services.AddSingleton<JsonSerializerOptions>((serviceProvider) =>
+{
+    var jsonSerializerOptions = new JsonSerializerOptions();
+    jsonSerializerOptions.ConfigureJsonSerializerOptions();
+    return jsonSerializerOptions;
 });
 
 builder.Services.AddIdentity<User, IdentityRole<int>>().
@@ -54,4 +66,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+await SeedRoles.SeedRolesAsync(app);
+await SeedUsers.SeedUsersAsync(app);
+
+await app.RunAsync();

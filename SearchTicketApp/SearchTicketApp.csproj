@@ -20,8 +20,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Shared\Partial\" />
-  </ItemGroup>
-
 </Project>

@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SearchTicketApp.Data.Models;
+using SearchTicketApp.Data.Models.Abstract;
+using SearchTicketApp.Models.Command;
 using SearchTicketApp.Models.Dto;
 using SearchTicketApp.Validation.Attributes;
 
-namespace SearchTicketApp.Data.Models.Abstract
+namespace SearchTicketApp.Models.Abstract
 {
     public abstract class TicketCommand : Entity
     {

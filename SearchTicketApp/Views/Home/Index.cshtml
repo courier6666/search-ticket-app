@@ -1,8 +1,97 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Find Your Perfect Trip</h1>
+        <p class="lead text-muted">
+            Search, compare and buy tickets for buses, trains, and flights.
+        </p>
+
+        <a href="/Tickets/Search" class="btn btn-primary btn-lg mt-3">
+            🔍 Search Tickets
+        </a>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row text-center">
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🔥 Best Prices</h5>
+                    <p class="card-text text-muted">
+                        We compare prices so you always get the best available deals.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🕒 Real-Time Availability</h5>
+                    <p class="card-text text-muted">
+                        See accurate departure times and live seat availability.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🛒 Easy Checkout</h5>
+                    <p class="card-text text-muted">
+                        Fast and secure ticket purchase with instant confirmation.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Ticket Categories -->
+    <div class="mt-5">
+        <h2 class="mb-4 fw-semibold text-center">Popular Categories</h2>
+
+        <div class="row text-center">
+
+            <div class="col-md-3 mb-4">
+                <a href="/Tickets/Bus" class="text-decoration-none text-dark">
+                    <div class="p-4 border rounded shadow-sm hover-shadow bg-light">
+                        🚌 Bus Tickets
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <a href="/Tickets/Train" class="text-decoration-none text-dark">
+                    <div class="p-4 border rounded shadow-sm bg-light">
+                        🚆 Train Tickets
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <a href="/Tickets/Flight" class="text-decoration-none text-dark">
+                    <div class="p-4 border rounded shadow-sm bg-light">
+                        ✈️ Flights
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
 </div>
+
+<style>
+    .hover-shadow:hover {
+        box-shadow: 0 0 20px rgba(0,0,0,0.15) !important;
+        transition: 0.2s ease-in-out;
+    }
+</style>

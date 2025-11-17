@@ -6,13 +6,13 @@ namespace SearchTicketApp.Services
 {
     public static class LocalAndUserTimeTicketSetter
     {
-        public static void SetLocalAndUserTime(TicketQuery query, UserContext userContext)
+        public static void SetLocalAndUserTime(TicketResult result, UserContext userContext)
         {
-            query.DepartureTimeUser = DateTimeConverter.ToLocal(query.DepartureTimeUtc, userContext.TimeZone);
-            query.ArrivalTimeUser = DateTimeConverter.ToLocal(query.ArrivalTimeUtc, userContext.TimeZone);
+            result.DepartureTimeUser = DateTimeConverter.ToLocal(result.DepartureTimeUtc, userContext.TimeZone);
+            result.ArrivalTimeUser = DateTimeConverter.ToLocal(result.ArrivalTimeUtc, userContext.TimeZone);
 
-            query.DepartureTimeLocal = DateTimeConverter.ToLocal(query.DepartureTimeUtc, query.DepartureLocalTimeZone);
-            query.ArrivalTimeLocal = DateTimeConverter.ToLocal(query.ArrivalTimeUtc, query.DepartureLocalTimeZone);
+            result.DepartureTimeLocal = DateTimeConverter.ToLocal(result.DepartureTimeUtc, result.DepartureLocalTimeZone);
+            result.ArrivalTimeLocal = DateTimeConverter.ToLocal(result.ArrivalTimeUtc, result.DepartureLocalTimeZone);
         }
     }
 }
