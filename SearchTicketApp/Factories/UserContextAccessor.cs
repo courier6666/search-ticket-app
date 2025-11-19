@@ -6,7 +6,7 @@ namespace SearchTicketApp.Factories
 {
     public class UserContextAccessor : IUserContextAccessor
     {
-        private const string UserContextCookieName = "UserContext";
+        private const string UserContextCookieName = "UserContextSearchAppCookie";
 
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly JsonSerializerOptions jsonOptions;
@@ -28,7 +28,7 @@ namespace SearchTicketApp.Factories
 
             try
             {
-                return JsonSerializer.Deserialize<UserContext>(cookieValue, jsonOptions);
+                return JsonSerializer.Deserialize<UserContext>(Uri.UnescapeDataString(cookieValue), jsonOptions);
             }
             catch (JsonException)
             {

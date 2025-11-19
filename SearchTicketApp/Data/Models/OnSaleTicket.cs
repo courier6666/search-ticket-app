@@ -11,5 +11,7 @@ namespace SearchTicketApp.Data.Models
         public long PurchaseCount { get; set; } = 0;
 
         public ICollection<PurchasedTicket> PurchasedTickets { get; set; }
+
+        public ICollection<User> UserViewed { get; set; }
     }
 }

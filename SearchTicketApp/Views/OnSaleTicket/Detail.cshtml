@@ -1,0 +1,87 @@
+﻿@model OnSaleTicketResult
+
+@{
+    var returnUrl = (string)ViewData["returnUrl"]!;
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <!-- Title -->
+            <h3 class="card-title mb-3">@Model.Title</h3>
+
+            <!-- ORIGIN / DESTINATION -->
+            <h5 class="mb-2">Route</h5>
+            <p class="mb-1">
+                <strong>From:</strong> @Model.Origin.Settlement
+                (@Model.Origin.Latitude, @Model.Origin.Longitude)
+            </p>
+            <p class="mb-3">
+                <strong>To:</strong> @Model.Destination.Settlement
+                (@Model.Destination.Latitude, @Model.Destination.Longitude)
+            </p>
+
+            <p class="mb-3">
+                <strong>Transportation:</strong> @Model.TravelTransportationType
+            </p>
+
+            <!-- TIMEZONE SECTIONS -->
+            @if (Model.UserLocalTimeZone != null)
+            {
+                <h5 class="mb-1">Your Timezone <span class="fw-normal">(@Model.UserLocalTimeZone)</span></h5>
+                <p class="mb-1"><strong>Departure:</strong> @Model.DepartureTimeUser!.Value.ToString("g")</p>
+                <p class="mb-3"><strong>Arrival:</strong> @Model.ArrivalTimeUser!.Value.ToString("g")</p>
+            }
+
+            <h5 class="mb-1">Local Timezone <span class="fw-normal">(@Model.DepartureLocalTimeZone)</span></h5>
+            <p class="mb-1"><strong>Departure:</strong> @Model.DepartureTimeLocal.ToString("g")</p>
+            <p class="mb-3"><strong>Arrival:</strong> @Model.ArrivalTimeLocal.ToString("g")</p>
+
+            <h5 class="mb-1">UTC</h5>
+            <p class="mb-1"><strong>Departure:</strong> @Model.DepartureTimeUtc.ToString("g")</p>
+            <p class="mb-4"><strong>Arrival:</strong> @Model.ArrivalTimeUtc.ToString("g")</p>
+
+            <!-- DISTANCE IF AVAILABLE -->
+            @if (Model.DistanceFromUserKm != null)
+            {
+                <p class="mb-4">
+                    <strong><i class="fa-solid fa-location-dot"></i> @Model.DistanceFromUserKm!.Value.ToString("F2") km</strong>
+                    from your location
+                </p>
+            }
+
+            <!-- PRICE + COUNTERS -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <span class="fw-bold fs-5">Price: $@Model.Price</span>
+                <span class="fw-bold">
+                    <i class="fa-solid fa-eye"></i> @Model.ViewsCount
+                    &nbsp;&nbsp;
+                    <i class="fa-solid fa-cart-arrow-down"></i> @Model.PurchaseCount
+                </span>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="d-flex gap-2">
+
+                @if (Model.IsBought)
+                {
+                    <button class="btn btn-secondary" disabled>Already Bought</button>
+                }
+                else
+                {
+                    <form method="post"
+                          asp-controller="OnSaleTicket"
+                          asp-action="Purchase"
+                          class="d-inline">
+                        <input type="hidden" name="ticketId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-primary">Buy Ticket</button>
+                    </form>
+                }
+
+                <a class="btn btn-secondary" href="@returnUrl">Back</a>
+            </div>
+
+        </div>
+    </div>
+</div>

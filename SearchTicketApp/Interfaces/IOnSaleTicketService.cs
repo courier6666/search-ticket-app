@@ -13,7 +13,11 @@ namespace SearchTicketApp.Interfaces
     {
         Task PurchaseTicketAsync(int onSaleTicketId, int userId);
 
+        Task ViewTicketAsync(int onSaleTicketId);
+
         Task<PagingInfo<OnSaleTicketResult>> GetAllPagedBasedOnQueryAsync(OnSaleSearchQuery query,
             int page, int pageSize);
+
+        Task<TicketTravelTypeViewsByUserResult> GetTicketTravelTypeViewsByUserAsync(int userId);
     }
 }

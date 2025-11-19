@@ -15,8 +15,9 @@ namespace SearchTicketApp.Services
     public class OnSaleTicketQueryFactory
     {
         private const double DistRelevancyModifier = 2;
-        private const double TimeZoneRelevancyModifier = 2;
-        private const double PopularRelevancyModifier = 0.5;
+        private const double TimeZoneRelevancyModifier = 1;
+        private const double PopularRelevancyModifier = 1;
+        private const double BasedOnPreferenceModifier = 1.5;
 
         private readonly TicketDbContext dbContext;
         private readonly IUserContextAccessor userContextAccessor;
@@ -120,6 +121,8 @@ namespace SearchTicketApp.Services
             var userContext = this.userContextAccessor.GetUserContext();
             ticketsQuery = FilterOnSaleTickets(ticketsQuery, query);
 
+            ticketsQuery = ticketsQuery.Where(t => t.DepartureTimeUtc >= DateTime.UtcNow);
+
             if (query.MyTimeZone)
             {
                 ticketsQuery = ticketsQuery.Where(t => t.DepartureLocalTimeZone == userContext!.TimeZone);
@@ -142,10 +145,34 @@ namespace SearchTicketApp.Services
                 var maxDistance = await GetOnSaleTicketQuery(GetQueryMappingExpressionBasedOnContext())
                     .MaxAsync(t => t.DistanceFromUserKm);
 
+                var viewedTicketsQuery = this.dbContext.Users.Include(u => u.ViewedTickets)
+                    .SelectMany(u => u.ViewedTickets);
+
+                var busTicketsCount = await viewedTicketsQuery
+                    .CountAsync(t => t.TravelTransportationType == TravelTransportationType.Bus);
+
+                var trainTicketsCount = await viewedTicketsQuery
+                    .CountAsync(t => t.TravelTransportationType == TravelTransportationType.Train);
+
+                var planeTicketsCount = await viewedTicketsQuery
+                    .CountAsync(t => t.TravelTransportationType == TravelTransportationType.Plane);
+
+                var viewedTicketsCount = await viewedTicketsQuery.CountAsync();
+
+                var busCoef = viewedTicketsCount > 0 ? busTicketsCount * 1.0 / viewedTicketsCount : 0;
+                var trainCoef = viewedTicketsCount > 0 ? trainTicketsCount * 1.0 / viewedTicketsCount : 0;
+                var planeCoef = viewedTicketsCount > 0 ? planeTicketsCount * 1.0 / viewedTicketsCount : 0;
+
                 return ticketsQuery.OrderByDescending(t =>
                     (1 - t.DistanceFromUserKm / maxDistance) * DistRelevancyModifier
                     + (t.DepartureLocalTimeZone == userContext!.TimeZone ? 1 : 0) * TimeZoneRelevancyModifier
-                    + (1 - (t.PurchaseCount + t.ViewsCount) / (maxPurchases + maxViews)) * PopularRelevancyModifier);
+                    + (1 - (t.PurchaseCount + t.ViewsCount) / (maxPurchases + maxViews)) * PopularRelevancyModifier
+                    + (
+                        t.TravelTransportationType == TravelTransportationType.Bus ? busCoef
+                        : t.TravelTransportationType == TravelTransportationType.Train ? trainCoef
+                        : t.TravelTransportationType == TravelTransportationType.Plane ? planeCoef
+                        : 0
+                    ) * BasedOnPreferenceModifier);
             }
 
             return ticketsQuery;

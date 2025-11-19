@@ -1,0 +1,30 @@
+﻿@model ProfileViewModel
+
+<div class="card shadow-sm mt-3">
+    <div class="card-body">
+
+        <h3 class="card-title mb-3">Your Profile</h3>
+
+        <p><strong>Email:</strong> @Model.UserResult.Email</p>
+
+        <hr />
+
+        <h5 class="mt-3 mb-2">Travel History</h5>
+
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Bus tickets viewed:</span>
+                <span class="fw-bold">@Model.BusCount</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Train tickets viewed:</span>
+                <span class="fw-bold">@Model.TrainCount</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Plane tickets viewed:</span>
+                <span class="fw-bold">@Model.PlaneCount</span>
+            </li>
+        </ul>
+
+    </div>
+</div>

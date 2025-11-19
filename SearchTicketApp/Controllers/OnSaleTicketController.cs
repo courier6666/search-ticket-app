@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SearchTicketApp.Extensions;
 using SearchTicketApp.Interfaces;
 using SearchTicketApp.Models.Query;
 using SearchTicketApp.Models.ViewModels;
@@ -9,10 +10,15 @@ namespace SearchTicketApp.Controllers
     {
         private readonly IOnSaleTicketService onSaleTicketService;
         private readonly IOnSaleTicketContextSearchService onSaleTicketContextSearchService;
-        public OnSaleTicketController(IOnSaleTicketService onSaleTicketService, IOnSaleTicketContextSearchService onSaleTicketContextSearchService)
+        private readonly IHttpContextAccessor httpContextAccessor;
+        public OnSaleTicketController(
+            IOnSaleTicketService onSaleTicketService,
+            IOnSaleTicketContextSearchService onSaleTicketContextSearchService,
+            IHttpContextAccessor httpContextAccessor)
         {
             this.onSaleTicketService = onSaleTicketService;
             this.onSaleTicketContextSearchService = onSaleTicketContextSearchService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet("Search/{page}")]
@@ -26,7 +32,8 @@ namespace SearchTicketApp.Controllers
                 Query = query,
             });
         }
-        [HttpGet("ContextSearch/{page}")]
+
+        [HttpGet("ContextSearch/{page:int}")]
 
         public async Task<IActionResult> ContextSearch([FromQuery] OnSaleContextSearchQuery? query, [FromRoute] int page, int pageSize = 6)
         {
@@ -38,9 +45,20 @@ namespace SearchTicketApp.Controllers
             });
         }
 
-        public async Task<IActionResult> Purchase()
+        [HttpGet("Detail/{onSaleTicketId:int}")]
+        public async Task<IActionResult> Detail([FromRoute] int onSaleTicketId, [FromQuery] string? returnUrl = null)
         {
-            throw new NotImplementedException();
+            var ticket = await this.onSaleTicketService.GetByIdAsync(onSaleTicketId);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            this.ViewData["returnUrl"] = returnUrl ?? "/";
+
+            await this.onSaleTicketService.ViewTicketAsync(onSaleTicketId);
+            return View(ticket);
         }
     }
 }

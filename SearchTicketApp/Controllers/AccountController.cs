@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SearchTicketApp.Data.Models;
 using SearchTicketApp.Exceptions;
@@ -6,6 +7,8 @@ using SearchTicketApp.Extensions;
 using SearchTicketApp.Interfaces;
 using SearchTicketApp.Models.Command;
 using SearchTicketApp.Models.Constants;
+using SearchTicketApp.Models.Result;
+using SearchTicketApp.Models.ViewModels;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace SearchTicketApp.Controllers
@@ -16,16 +19,18 @@ namespace SearchTicketApp.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly RoleManager<IdentityRole<int>> roleManager;
         private readonly IUserContextAccessor userContextAccessor;
-
+        private readonly IOnSaleTicketService onSaleTicketService;
         public AccountController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             RoleManager<IdentityRole<int>> roleManager,
-            IUserContextAccessor userContextAccessor)
+            IUserContextAccessor userContextAccessor,
+            IOnSaleTicketService onSaleTicketService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
             this.userContextAccessor = userContextAccessor;
+            this.onSaleTicketService = onSaleTicketService;
         }
 
         private async Task<bool> UserWithEmailExistsAsync(string email)
@@ -45,7 +50,7 @@ namespace SearchTicketApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LogOut(string returnUrl)
+        public async Task<IActionResult> LogOut([FromQuery]string? returnUrl = "/")
         {
             if(this.HttpContext.User.IsAuthenticated())
                 await this.signInManager.SignOutAsync();
@@ -171,6 +176,25 @@ namespace SearchTicketApp.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Profile(string returnUrl = "/")
+        {
+            var user = (await userManager.GetUserAsync(User))!;
+            var viewCounts = await this.onSaleTicketService.GetTicketTravelTypeViewsByUserAsync(user.Id);
+
+            return View(new ProfileViewModel()
+            {
+                UserResult = new UserResult()
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                },
+                BusCount = viewCounts.BusCount,
+                TrainCount = viewCounts.TrainCount,
+                PlaneCount = viewCounts.PlaneCount
+            });
         }
     }
 }

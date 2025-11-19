@@ -1,27 +1,22 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
-const findMyTimeZone = () => {
+﻿const findMyTimeZone = () => {
     let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     return timezone;
 };
 
 const cookieExists = () => {
-    return document.cookie.split(';').some(c => c.trim().startsWith('UserContext'));
+    return document.cookie.split(';').some(c => c.trim().startsWith("UserContextSearchAppCookie"));
 }
 
 const setCookie = (name, value, expirationDays) => {
     const d = new Date();
     d.setTime(d.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
     let expires = "expires=" + d.toUTCString();
-    document.cookie = name + "=" + value + ";" + expires + `;path=/; SameSite=Lax; Secure`;
+    document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + `;path=/; SameSite=none; Secure`;
 }
 
 const setUserContextCookieJson = () => {
 
-    if (cookieExists)
+    if (cookieExists())
         return;
 
     navigator.geolocation.getCurrentPosition((position) => {
@@ -38,7 +33,7 @@ const setUserContextCookieJson = () => {
         console.log(cookieJson);
 
         let jsonUserContextCookie = JSON.stringify(cookieJson);
-        setCookie('UserContext', jsonUserContextCookie, 1);
+        setCookie('UserContextSearchAppCookie', jsonUserContextCookie, 1);
         console.log(document.cookie);
     },
         () => {
@@ -48,5 +43,7 @@ const setUserContextCookieJson = () => {
     let timezone = findMyTimeZone();
 
 };
+
+console.log(document.cookie);
 
 setUserContextCookieJson();

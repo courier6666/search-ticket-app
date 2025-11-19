@@ -29,6 +29,29 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                 </ul>
+                <ul class="navbar-nav flex-grow-1 d-flex justify-content-end">
+                    @if (isAuthenticated)
+                    {
+                        <li>
+                            <a asp-controller="Account" asp-action="Profile"><span class="nav-link text-dark">@Context.User.GetUserName()</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="LogOut" method="post">
+                                <input type="hidden" value="@url" name="returnUrl"/>
+                                <button class="btn btn-danger" type="submit">Log Out</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </nav>

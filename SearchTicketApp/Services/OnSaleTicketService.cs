@@ -19,6 +19,7 @@ namespace SearchTicketApp.Services
     public class OnSaleTicketService : OnSaleTicketQueryFactory, IOnSaleTicketService
     {
         private readonly TicketDbContext dbContext;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public OnSaleTicketService(TicketDbContext dbContext,
             IUserContextAccessor userContextAccessor,
@@ -26,6 +27,7 @@ namespace SearchTicketApp.Services
             : base(dbContext, userContextAccessor, httpContextAccessor)
         {
             this.dbContext = dbContext;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task AddAsync(OnSaleTicketCommand entity)
@@ -186,6 +188,61 @@ namespace SearchTicketApp.Services
             }
 
             return pagedTickets;
+        }
+
+        public async Task ViewTicketAsync(int onSaleTicketId)
+        {
+            var ticket = await this.dbContext.Tickets.FindAsync(onSaleTicketId);
+            if (ticket == null)
+            {
+                throw new InvalidOperationException($"Ticket by id '{onSaleTicketId}' not found.");
+            }
+
+            ++ticket.ViewsCount;
+
+            var userClaims = this.httpContextAccessor.HttpContext!.User;
+
+            if (userClaims.IsAuthenticated())
+            {
+                var user = await this.dbContext.Users.
+                    Include(u => u.ViewedTickets).
+                    FirstOrDefaultAsync(u => u.Id == userClaims.GetUserId());
+
+                if(user != null)
+                    user.ViewedTickets.Add(ticket);
+            }
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task<TicketTravelTypeViewsByUserResult> GetTicketTravelTypeViewsByUserAsync(int userId)
+        {
+
+            var user = await this.dbContext.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException($"Could not find user by id '{userId}'.");
+            }
+
+            var viewedTicketsQuery = this.dbContext.Users.Include(u => u.ViewedTickets)
+                .SelectMany(u => u.ViewedTickets);
+
+            var busTicketsCount = await viewedTicketsQuery
+                .CountAsync(t => t.TravelTransportationType == TravelTransportationType.Bus);
+
+            var trainTicketsCount = await viewedTicketsQuery
+                .CountAsync(t => t.TravelTransportationType == TravelTransportationType.Train);
+
+            var planeTicketsCount = await viewedTicketsQuery
+                .CountAsync(t => t.TravelTransportationType == TravelTransportationType.Plane);
+
+            return new TicketTravelTypeViewsByUserResult()
+            {
+                BusCount = busTicketsCount,
+                PlaneCount = planeTicketsCount,
+                TrainCount = trainTicketsCount
+            };
         }
     }
 }

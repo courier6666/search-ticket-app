@@ -60,11 +60,19 @@
         </form>
     </div>
     <div class="col-9">
-        @foreach (var item in Model.Tickets.Items)
+        @if (Model.Tickets.TotalCount > 0)
         {
-            <div class="mb-3">
-                <partial name="Partial/_OnSaleTicketPreview" model="item" />
-            </div>
+            <h4 class="mb-4 fw-bold">Found tickets: <span>@Model.Tickets.TotalCount</span></h4>
+            @foreach (var item in Model.Tickets.Items)
+            {
+                <div class="mb-3">
+                    <partial name="Partial/_OnSaleTicketPreview" model="item" />
+                </div>
+            }
+        }
+        else
+        {
+            <h4 class="mb-4 fw-bold">No tickets found.</h4>
         }
         
         <partial name="Partial/_PagingLinksPartial"

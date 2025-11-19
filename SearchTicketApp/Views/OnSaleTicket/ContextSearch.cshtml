@@ -26,7 +26,7 @@
     // Context option
     string? contextOption = query.ClosestToMe == true ? "ClosestToMe" :
         query.MostPopular == true ? "MostPopular" :
-        query.MostRelevant == true ? "MyTimeZone" : null;
+        query.MostRelevant == true ? "MostRelevant" : null;
 
     if (!string.IsNullOrWhiteSpace(contextOption))
         queryParams["query.contextOption"] = contextOption;
@@ -149,12 +149,12 @@
 
         <partial name="Partial/_PagingLinksPartial"
                  model="@(Model.Tickets.HasPrevious,
-                                                          Model.Tickets.HasNext,
-                                                          Model.Tickets.Page,
-                                                          Model.Tickets.TotalPages,
-                                                          Model.Tickets.TotalCount,
-                                                          "OnSaleTicket",
-                                                          "ContextSearch",
-                                                          queryParams)" />
+                 Model.Tickets.HasNext,
+                 Model.Tickets.Page,
+                 Model.Tickets.TotalPages,
+                 Model.Tickets.TotalCount,
+                 "OnSaleTicket",
+                 "ContextSearch",
+                 queryParams)" />
     </div>
 </div>
