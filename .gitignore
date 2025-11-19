@@ -488,3 +488,6 @@ $RECYCLE.BIN/
 
 # Appsettings
 **/appsettings.*json
+
+# Client libraries
+**/wwwroot/lib

@@ -42,8 +42,8 @@ builder.Services.AddIdentity<User, IdentityRole<int>>().
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextAccessor, UserContextAccessor>();
 builder.Services.AddScoped<IOnSaleTicketService, OnSaleTicketService>();
+builder.Services.AddScoped<IOnSaleTicketContextSearchService, OnSaleTicketContextSearchService>();
 builder.Services.AddScoped<IPurchasedTicketService, PurchasedTicketService>();
-builder.Services.AddScoped<IOnSaleTicketSearchService, OnSaleTicketSearchService>();
 
 var app = builder.Build();
 
@@ -68,5 +68,6 @@ app.MapControllerRoute(
 
 await SeedRoles.SeedRolesAsync(app);
 await SeedUsers.SeedUsersAsync(app);
+await SeedTickets.SeedOnSaleTicketsAsync(app);
 
 await app.RunAsync();

@@ -1,0 +1,29 @@
+﻿@model (bool HasPrevious, bool HasNext, int Page, int TotalPages, int TotalCount, string Controller, string Action, Dictionary<string, string?> QueryParams)
+
+<div class="text-center m-3 d-flex justify-content-center gap-1">
+    @if (Model.HasPrevious)
+    {
+        <a asp-action="@Model.Action" asp-controller="@Model.Controller" class="btn btn-primary"
+           asp-all-route-data="Model.QueryParams" asp-route-page="1">
+            <span><i class="fa-solid fa-angles-left"></i></span>
+        </a>
+        <a asp-action="@Model.Action" asp-controller="@Model.Controller" class="btn btn-primary"
+           asp-all-route-data="Model.QueryParams" asp-route-page="@(Model.Page - 1)">
+            <span><i class="fa-solid fa-angle-left"></i></span>
+        </a>
+    }
+
+    <span class="p-1 ps-2 pe-2 pt-2 badge bg-primary">@Model.Page</span>
+
+    @if (Model.HasNext)
+    {
+        <a asp-action="@Model.Action" asp-controller="@Model.Controller" class="btn btn-primary"
+           asp-all-route-data='Model.QueryParams' asp-route-page="@(Model.Page + 1)">
+            <span><i class="fa-solid fa-angle-right"></i></span>
+        </a>
+        <a asp-action="@Model.Action" asp-controller="@Model.Controller" class="btn btn-primary"
+           asp-all-route-data="Model.QueryParams" asp-route-page="@(Model.TotalPages)">
+            <span><i class="fa-solid fa-angles-right"></i></span>
+        </a>
+    }
+</div>

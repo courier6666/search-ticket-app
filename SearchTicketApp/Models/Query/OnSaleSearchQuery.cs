@@ -12,8 +12,6 @@ namespace SearchTicketApp.Models.Query
 
         public float? PriceUpper { get; set; }
 
-        public bool? MyTimeZoneOnly { get; set; }
-
         public TravelTransportationType? TravelTransportationType { get; set; }
     }
 }

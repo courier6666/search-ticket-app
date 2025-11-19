@@ -11,8 +11,11 @@
             Search, compare and buy tickets for buses, trains, and flights.
         </p>
 
-        <a href="/Tickets/Search" class="btn btn-primary btn-lg mt-3">
+        <a asp-controller="OnSaleTicket" asp-action="Search" asp-route-page="1" class="btn btn-primary btn-lg mt-3">
             🔍 Search Tickets
+        </a>
+        <a asp-controller="OnSaleTicket" asp-action="ContextSearch" asp-route-page="1" class="btn btn-primary btn-lg mt-3">
+            🔍 Context Search Tickets
         </a>
     </div>
 

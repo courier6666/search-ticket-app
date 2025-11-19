@@ -9,5 +9,9 @@ namespace SearchTicketApp.Models.Result
         public long PurchaseCount { get; set; } = 0;
 
         public bool IsBought { get; set; } = false;
+
+        public double? DistanceFromUserKm { get; set; } = null;
+
+        public double? RelevancyScore { get; set; } = null;
     }
 }

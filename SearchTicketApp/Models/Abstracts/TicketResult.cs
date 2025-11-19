@@ -42,12 +42,12 @@ namespace SearchTicketApp.Models.Abstracts
         /// <summary>
         /// Departure time based on client's (user's) local time.
         /// </summary>
-        public DateTime DepartureTimeUser { get; set; }
+        public DateTime? DepartureTimeUser { get; set; }
 
         /// <summary>
         /// Arrival time based on client's (user's) local time.
         /// </summary>
-        public DateTime ArrivalTimeUser { get; set; }
+        public DateTime? ArrivalTimeUser { get; set; }
 
         /// <summary>
         /// Time zone for the area of departure.
@@ -58,6 +58,6 @@ namespace SearchTicketApp.Models.Abstracts
         /// <summary>
         /// Time zone of client's (user's) area.
         /// </summary>
-        public string UserLocalTimeZone { get; set; } = default;
+        public string? UserLocalTimeZone { get; set; } = default;
     }
 }

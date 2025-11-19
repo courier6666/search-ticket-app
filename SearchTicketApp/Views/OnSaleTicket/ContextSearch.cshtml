@@ -1,0 +1,160 @@
+﻿@using SearchTicketApp.Interfaces
+@model TicketContextSearchViewModel
+
+@inject IUserContextAccessor UserContextAccessor
+
+@{
+    var userContext = UserContextAccessor.GetUserContext();
+    var query = Model.Query;
+    var queryParams = new Dictionary<string, string?>();
+
+    if (!string.IsNullOrWhiteSpace(query.Title))
+        queryParams["query.title"] = query.Title;
+
+    if (!string.IsNullOrWhiteSpace(query.Settlement))
+        queryParams["query.settlement"] = query.Settlement;
+
+    if (query.PriceLower != null)
+        queryParams["query.priceLower"] = query.PriceLower.ToString();
+
+    if (query.PriceUpper != null)
+        queryParams["query.priceUpper"] = query.PriceUpper.ToString();
+
+    if (query.TravelTransportationType != null)
+        queryParams["query.travelTransportationType"] = query.TravelTransportationType.ToString();
+
+    // Context option
+    string? contextOption = query.ClosestToMe == true ? "ClosestToMe" :
+        query.MostPopular == true ? "MostPopular" :
+        query.MostRelevant == true ? "MyTimeZone" : null;
+
+    if (!string.IsNullOrWhiteSpace(contextOption))
+        queryParams["query.contextOption"] = contextOption;
+
+
+    queryParams["query.myTimeZone"] = query.MyTimeZone.ToString();
+
+}
+
+
+<div class="row justify-content-md-center">
+    <div class="col-3">
+        <form asp-action="ContextSearch" method="get" class="border p-3 rounded">
+            <h5>Search Tickets</h5>
+
+            <!-- Base filters -->
+            <div class="mb-3">
+                <label asp-for="Query.Title" class="form-label">Title</label>
+                <input asp-for="Query.Title" name="query.title" class="form-control" placeholder="Enter title" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Query.Settlement" class="form-label">Settlement</label>
+                <input asp-for="Query.Settlement" name="query.settlement" class="form-control" placeholder="Enter settlement" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Query.PriceLower" class="form-label">Min Price</label>
+                <input asp-for="Query.PriceLower" name="query.priceLower" type="number" step="0.01" class="form-control" placeholder="0" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Query.PriceUpper" class="form-label">Max Price</label>
+                <input asp-for="Query.PriceUpper" name="query.priceUpper" type="number" step="0.01" class="form-control" placeholder="1000" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Query.TravelTransportationType" class="form-label">Transportation Type</label>
+                <select asp-for="Query.TravelTransportationType" name="query.travelTransportationType" class="form-select">
+                    <option value="">Any</option>
+                    <option value="Bus">Bus</option>
+                    <option value="Train">Train</option>
+                    <option value="Plane">Plane</option>
+                </select>
+            </div>
+            <fieldset class="mb-3">
+                <label class="form-label">Use my timezone?</label>
+
+                <div class="form-check">
+                    <input type="radio" class="form-check-input"
+                           name="query.myTimeZone" value="true"
+                           @(query.MyTimeZone ? "checked" : "") />
+                    <label class="form-check-label">Yes</label>
+                </div>
+
+                <div class="form-check">
+                    <input type="radio" class="form-check-input"
+                           name="query.myTimeZone" value="false"
+                           @(!query.MyTimeZone ? "checked" : "") />
+                    <label class="form-check-label">No</label>
+                </div>
+            </fieldset>
+
+
+
+            <!-- Context-specific radio buttons -->
+            <fieldset class="mb-3">
+                <legend class="col-form-label">Sort / Context Filter</legend>
+
+                @if (userContext != null && userContext?.Location != null)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="query.contextOption" value="ClosestToMe"
+                               @(Model.Query.ClosestToMe ? "checked" : "") />
+                        <label class="form-check-label">Closest to Me</label>
+                    </div>
+                }
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="query.contextOption" value="MostPopular"
+                           @(Model.Query.MostPopular ? "checked" : "") />
+                    <label class="form-check-label">Most Popular</label>
+                </div>
+
+                @if (userContext != null && (userContext?.TimeZone != null && userContext?.Location != null))
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="query.contextOption" value="MostRelevant"
+                               @(Model.Query.MostRelevant ? "checked" : "") />
+                        <label class="form-check-label">Most Relevant</label>
+                    </div>
+                }
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="query.contextOption" value=""
+                           @(String.IsNullOrWhiteSpace(Model.Query.ContextOption) ? "checked" : "") />
+                    <label class="form-check-label">None</label>
+                </div>
+
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </form>
+    </div>
+    <div class="col-9">
+        @if (Model.Tickets.TotalCount > 0)
+        {
+            <h4 class="mb-4 fw-bold">Found tickets: <span>@Model.Tickets.TotalCount</span></h4>
+            @foreach (var item in Model.Tickets.Items)
+            {
+                <div class="mb-3">
+                    <partial name="Partial/_OnSaleTicketPreview" model="item" />
+                </div>
+            }
+        }
+        else
+        {
+            <h4 class="mb-4 fw-bold">No tickets found.</h4>
+        }
+
+        <partial name="Partial/_PagingLinksPartial"
+                 model="@(Model.Tickets.HasPrevious,
+                                                          Model.Tickets.HasNext,
+                                                          Model.Tickets.Page,
+                                                          Model.Tickets.TotalPages,
+                                                          Model.Tickets.TotalCount,
+                                                          "OnSaleTicket",
+                                                          "ContextSearch",
+                                                          queryParams)" />
+    </div>
+</div>

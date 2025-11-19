@@ -29,7 +29,9 @@ namespace SearchTicketApp.Data.Seed
 
                 if (!createUserResult.Succeeded)
                     throw new InvalidOperationException("Failed to create admin!");
-
+            }
+            else
+            {
                 admin = foundUser;
             }
 

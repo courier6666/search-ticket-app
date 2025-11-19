@@ -1,6 +1,7 @@
 ﻿using SearchTicketApp.Data.Models;
 using SearchTicketApp.Data.Models.Abstract;
 using SearchTicketApp.Models.Command;
+using SearchTicketApp.Models.Query;
 using SearchTicketApp.Models.Result;
 using SearchTicketApp.Shared;
 
@@ -11,5 +12,8 @@ namespace SearchTicketApp.Interfaces
         IEntityQueryService<OnSaleTicketResult>
     {
         Task PurchaseTicketAsync(int onSaleTicketId, int userId);
+
+        Task<PagingInfo<OnSaleTicketResult>> GetAllPagedBasedOnQueryAsync(OnSaleSearchQuery query,
+            int page, int pageSize);
     }
 }

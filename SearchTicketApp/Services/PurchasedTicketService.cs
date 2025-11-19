@@ -20,6 +20,16 @@ namespace SearchTicketApp.Services
             this.userContextAccessor = userContextAccessor;
         }
 
+        private void SetLocalAndUserTime(PurchasedTicketResult purchasedTicket)
+        {
+            var userContext = this.userContextAccessor.GetUserContext();
+
+            SetLocalTime(purchasedTicket);
+
+            if (userContext != null)
+                SetUserTime(purchasedTicket, userContext);
+        }
+
         private IQueryable<PurchasedTicketResult> GetPurchasedTicketQuery()
         {
             return this.dbContext.PurchasedTickets.
@@ -38,7 +48,7 @@ namespace SearchTicketApp.Services
             if (userContext != null)
                 foreach (var ticket in tickets)
                 {
-                    SetLocalAndUserTime(ticket, userContext);
+                    SetLocalAndUserTime(ticket);
                 }
 
             return tickets;
@@ -55,7 +65,7 @@ namespace SearchTicketApp.Services
             if (userContext != null)
                 foreach (var ticket in usersTickets)
                 {
-                    SetLocalAndUserTime(ticket, userContext);
+                    SetLocalAndUserTime(ticket);
                 }
 
             return usersTickets;
@@ -83,9 +93,9 @@ namespace SearchTicketApp.Services
 
             var userContext = userContextAccessor.GetUserContext();
 
-            if (foundTicket != null && userContext != null)
+            if (foundTicket != null)
             {
-                SetLocalAndUserTime(foundTicket, userContext);
+                SetLocalAndUserTime(foundTicket);
             }
 
             return foundTicket;

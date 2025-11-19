@@ -19,71 +19,68 @@
         </p>
 
         <!-- Departure / Arrival Times -->
-        <h6 class="card-text mb-1"><strong>Your timezone</strong></h6>
-        <p class="card-text mb-1">
+        @if (Model.UserLocalTimeZone != null)
+        {
+            <h6 class="card-text mb-1"><strong>Your timezone</strong></h6>
             <div>
                 <strong>(@Model.UserLocalTimeZone)</strong>
             </div>
-            <div>
-                <strong>Departure:</strong> @Model.DepartureTimeUser.ToString("g")
-            </div>
+            <p class="card-text mb-1">
+                <div>
+                    <strong>Departure:</strong> @Model.DepartureTimeUser!.Value.ToString("g")
+                </div>
 
-        </p>
-        <p class="card-text mb-3">
-            <div>
-                <strong>(@Model.UserLocalTimeZone)</strong>
-            </div>
-            <div>
-                <strong>Arrival:</strong> @Model.ArrivalTimeUser.ToString("g")
-            </div>
-        </p>
-        
+            </p>
+            <p class="card-text mb-3">
+                <div>
+                    <strong>Arrival:</strong> @Model.ArrivalTimeUser!.Value.ToString("g")
+                </div>
+            </p>
+        }
+
         <h6 class="card-text mb-1"><strong>Local Timezone</strong></h6>
+        <div>
+            <strong>(@Model.DepartureLocalTimeZone)</strong>
+        </div>
         <p class="card-text mb-1">
+
             <div>
-                <strong>(@Model.UserLocalTimeZone)</strong>
-            </div>
-            <div>
-                <strong>Departure:</strong> @Model.DepartureTimeUser.ToString("g")
+                <strong>Departure:</strong> @Model.DepartureTimeLocal.ToString("g")
             </div>
 
         </p>
         <p class="card-text mb-3">
             <div>
-                <strong>(@Model.UserLocalTimeZone)</strong>
-            </div>
-            <div>
-                <strong>Arrival:</strong> @Model.ArrivalTimeUser.ToString("g")
+                <strong>Arrival:</strong> @Model.ArrivalTimeLocal.ToString("g")
             </div>
         </p>
         
         <h6 class="card-text mb-1"><strong>UTC</strong></h6>
         <p class="card-text mb-1">
             <div>
-                <strong>(@Model.UserLocalTimeZone)</strong>
-            </div>
-            <div>
-                <strong>Departure:</strong> @Model.DepartureTimeUser.ToString("g")
+                <strong>Departure:</strong> @Model.DepartureTimeUtc.ToString("g")
             </div>
 
         </p>
         <p class="card-text mb-3">
             <div>
-                <strong>(@Model.UserLocalTimeZone)</strong>
-            </div>
-            <div>
-                <strong>Arrival:</strong> @Model.ArrivalTimeUser.ToString("g")
+                <strong>Arrival:</strong> @Model.ArrivalTimeUtc.ToString("g")
             </div>
         </p>
         
-
+        @if (Model.DistanceFromUserKm != null)
+        {
+            <p class="card-text mb-3">
+                <span class="fw-bold"><i class="fa-solid fa-location-dot"></i> <span>@Model.DistanceFromUserKm!.Value.ToString("F2")</span> km from you.</span>
+            </p>
+        }
 
         <!-- Price and Stats -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="fw-bold">Price: $@Model.Price</span>
-            <span>
-                <i class="bi bi-eye"></i> @Model.ViewsCount
-                <i class="bi bi-cart"></i> @Model.PurchaseCount
+            <span class="fw-bold">
+                <i class="fa-solid fa-eye"></i> @Model.ViewsCount
+                <i class="fa-solid fa-cart-arrow-down"></i> @Model.PurchaseCount
             </span>
         </div>
 
